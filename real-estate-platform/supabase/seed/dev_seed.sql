@@ -1,0 +1,4 @@
+-- Run after creating an admin user in Supabase Auth dashboard.
+-- Replace YOUR_ADMIN_USER_ID with the auth.users id.
+--
+-- UPDATE profiles SET role = 'admin' WHERE email = 'admin@veraestates.in';
