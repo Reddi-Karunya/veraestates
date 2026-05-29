@@ -15,13 +15,12 @@ CREATE TYPE lead_timeline_event AS ENUM (
 );
 
 -- Extend lead_status (existing: new, contacted, closed)
-ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'site_visit_scheduled';
-ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'negotiating';
-ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'won';
+ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'site_visit_scheduled' AFTER 'contacted';
+ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'negotiating' AFTER 'site_visit_scheduled';
+ALTER TYPE lead_status RENAME VALUE 'closed' TO 'won';
 ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'lost';
 
--- Migrate legacy closed → won
-UPDATE leads SET status = 'won' WHERE status::text = 'closed';
+-- Legacy rows with status closed are now won through enum label rename
 
 -- New columns on leads
 ALTER TABLE leads
