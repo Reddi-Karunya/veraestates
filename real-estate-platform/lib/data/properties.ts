@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServerClientWithoutCookies } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { mapRowToListItem, mapRowToProperty } from "@/lib/data/map-property";
 import type { PropertyFilters } from "@/lib/data/search-params";
@@ -216,7 +216,7 @@ export async function fetchAllSlugsFromDb(): Promise<string[]> {
     return mockProperties.map((p) => p.slug);
   }
 
-  const supabase = await createClient();
+  const supabase = createServerClientWithoutCookies();
   const { data } = await supabase
     .from("properties")
     .select("slug")
