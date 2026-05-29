@@ -41,6 +41,18 @@ Copy `.env.local` and set the following values:
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_WHATSAPP_NUMBER`
 
+## Admin Dashboard
+
+Access the admin portal at:
+
+- https://veraestates.vercel.app/login
+
+Admin features:
+- Manage properties and listings
+- Track and respond to leads
+- Verify property details
+- Monitor dashboard analytics
+
 ## Deployment
 
 This project is designed to deploy on Vercel. The live site is available at:
