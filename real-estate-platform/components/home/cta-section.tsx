@@ -38,7 +38,7 @@ export function CtaSection() {
                 className="h-12 w-full border-cream/20 bg-transparent px-8 text-base text-cream hover:border-gold/50 hover:bg-gold/5 hover:text-gold sm:w-auto"
                 render={
                   <a
-                    href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20verified%20properties%20on%20VeraEstates."
+                    href="https://wa.me/919966612881?text=Hi%2C%20I%27m%20interested%20in%20verified%20properties%20on%20VeraEstates."
                     target="_blank"
                     rel="noopener noreferrer"
                   />

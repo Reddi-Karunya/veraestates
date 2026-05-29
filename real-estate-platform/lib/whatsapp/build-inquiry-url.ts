@@ -1,7 +1,7 @@
 import type { Property } from "@/lib/mock-properties";
 import { formatPriceINR } from "@/lib/format-price";
 
-const DEFAULT_WHATSAPP_NUMBER = "919876543210";
+const DEFAULT_WHATSAPP_NUMBER = "919966612881";
 
 type BuildInquiryUrlOptions = {
   property: Pick<
@@ -27,5 +27,6 @@ export function buildWhatsAppInquiryUrl({
   ].join("\n");
 
   const digits = phoneNumber.replace(/\D/g, "");
-  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+  const normalizedPhoneNumber = digits.length === 10 ? `91${digits}` : digits;
+  return `https://wa.me/${normalizedPhoneNumber}?text=${encodeURIComponent(message)}`;
 }
