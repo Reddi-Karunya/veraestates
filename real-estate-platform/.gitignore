@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# Supabase CLI temp files
+supabase/.temp
+
 # production
 /build
 
