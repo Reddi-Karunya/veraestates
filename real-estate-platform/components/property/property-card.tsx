@@ -44,7 +44,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           )}
           {property.costBreakdown?.has_savings && (
             <SavingsBadge
-              savings={property.costBreakdown.estimated_savings}
+              savings={property.costBreakdown.computed_savings}
             />
           )}
         </div>

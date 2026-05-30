@@ -18,14 +18,11 @@ CREATE TABLE verification_check_types (
 
 INSERT INTO verification_check_types (code, label, description, sort_order, icon) VALUES
   ('owner_identity', 'Owner Identity Verified', 'Seller identity and authority to sell confirmed', 1, 'user-check'),
-  ('rera', 'RERA Verified', 'RERA registration and disclosures validated', 2, 'badge-check'),
-  ('vmrda', 'VMRDA Verified', 'VMRDA / planning authority compliance checked', 3, 'landmark'),
-  ('dtcp', 'DTCP Verified', 'DTCP layout approval verified where applicable', 4, 'file-check'),
-  ('encumbrance_certificate', 'Encumbrance Certificate Verified', 'EC reviewed — no outstanding encumbrances', 5, 'shield'),
-  ('registration_documents', 'Registration Documents Verified', 'Sale deed and chain of title documents reviewed', 6, 'file-text'),
-  ('site_visit', 'Site Visit Completed', 'On-ground inspection completed by our team', 7, 'map-pin'),
-  ('property_images', 'Property Images Verified', 'Listing photos match on-site condition', 8, 'image'),
-  ('location', 'Location Verified', 'Address, coordinates, and landmarks confirmed', 9, 'map')
+  ('encumbrance_certificate', 'Encumbrance Certificate Verified', 'EC reviewed — no outstanding encumbrances', 2, 'shield'),
+  ('registration_documents', 'Registration Documents Verified', 'Sale deed and chain of title documents reviewed', 3, 'file-text'),
+  ('site_visit', 'Site Visit Completed', 'On-ground inspection completed by our team', 4, 'map-pin'),
+  ('property_images', 'Property Images Verified', 'Listing photos match on-site condition', 5, 'image'),
+  ('location', 'Location Verified', 'Address, coordinates, and landmarks confirmed', 6, 'map')
 ON CONFLICT (code) DO UPDATE SET
   label = EXCLUDED.label,
   description = EXCLUDED.description,

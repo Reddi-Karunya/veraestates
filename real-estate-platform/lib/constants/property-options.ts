@@ -31,9 +31,9 @@ export const verificationStatusOptions: {
 
 export const approvalTypeOptions: { value: ApprovalType; label: string }[] = [
   { value: "rera", label: "RERA" },
+  { value: "vmrda", label: "VMRDA" },
   { value: "dtcp", label: "DTCP" },
-  { value: "hmda", label: "HMDA" },
-  { value: "municipal", label: "Municipal" },
+  { value: "gvmc", label: "GVMC" },
   { value: "panchayat", label: "Panchayat" },
   { value: "other", label: "Other" },
 ];

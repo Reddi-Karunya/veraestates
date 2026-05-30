@@ -19,8 +19,14 @@ type CostBreakdownFormProps = {
   propertySlug?: string;
 };
 
-const fields = [
-  { name: "base_price", label: COST_LINE_LABELS.base_price },
+type CostBreakdownField = {
+  name: keyof Omit<CostBreakdownComputed, "property_id" | "total_cost" | "computed_savings" | "has_savings">;
+  label: string;
+  hint?: string;
+};
+
+const fields: CostBreakdownField[] = [
+  { name: "owner_price", label: COST_LINE_LABELS.owner_price, hint: "Verified direct seller price" },
   { name: "registration_cost", label: COST_LINE_LABELS.registration_cost },
   {
     name: "legal_verification_cost",
@@ -29,10 +35,11 @@ const fields = [
   { name: "platform_fee", label: COST_LINE_LABELS.platform_fee },
   { name: "miscellaneous_cost", label: COST_LINE_LABELS.miscellaneous_cost },
   {
-    name: "estimated_market_price",
-    label: COST_LINE_LABELS.estimated_market_price,
+    name: "market_price",
+    label: COST_LINE_LABELS.market_price,
+    hint: "Typical broker-assisted price in this market",
   },
-] as const;
+];
 
 export function CostBreakdownForm({
   propertyId,
@@ -46,12 +53,12 @@ export function CostBreakdownForm({
   );
 
   const preview = computeCostBreakdown({
-    base_price: breakdown.base_price,
+    owner_price: breakdown.owner_price,
     registration_cost: breakdown.registration_cost,
     legal_verification_cost: breakdown.legal_verification_cost,
     platform_fee: breakdown.platform_fee,
     miscellaneous_cost: breakdown.miscellaneous_cost,
-    estimated_market_price: breakdown.estimated_market_price,
+    market_price: breakdown.market_price,
   });
 
   return (
@@ -60,11 +67,11 @@ export function CostBreakdownForm({
         <div>
           <h2 className="font-display text-lg text-navy">Cost breakdown</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Shown to buyers in the Cost Transparency section on the property page.
+            Direct Deal Advantage: Owner price vs. Typical broker-assisted market price.
           </p>
         </div>
         {preview.has_savings && (
-          <SavingsBadge savings={preview.estimated_savings} size="md" />
+          <SavingsBadge savings={preview.computed_savings} size="md" />
         )}
       </div>
 
@@ -90,38 +97,55 @@ export function CostBreakdownForm({
           {fields.map((field) => (
             <div key={field.name} className="space-y-2">
               <Label htmlFor={field.name}>{field.label}</Label>
+              {field.hint && (
+                <p className="text-xs text-muted-foreground">{field.hint}</p>
+              )}
               <Input
                 id={field.name}
                 name={field.name}
                 type="number"
                 min={0}
-                step={field.name === "base_price" ? 100000 : 1000}
+                step={field.name === "owner_price" ? 100000 : 1000}
                 defaultValue={
                   breakdown[field.name] != null ? String(breakdown[field.name]) : ""
                 }
-                required={field.name !== "estimated_market_price"}
+                required={field.name !== "market_price"}
               />
             </div>
           ))}
         </div>
 
         <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Computed preview
-          </p>
-          <div className="mt-2 flex flex-wrap gap-6">
+          <div className="space-y-4">
             <div>
-              <p className="text-xs text-muted-foreground">Total acquisition</p>
-              <p className="font-display text-lg text-gold">
-                {formatPriceINR(preview.total_cost)}
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Direct Deal Advantage
               </p>
+              <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">Owner price</p>
+                  <p className="font-display text-lg text-navy">
+                    {formatPriceINR(preview.owner_price)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Market price</p>
+                  <p className="font-display text-lg text-navy">
+                    {preview.market_price ? formatPriceINR(preview.market_price) : "—"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">You save</p>
+                  <p className={`font-display text-lg ${preview.has_savings ? "text-emerald-600" : "text-muted-foreground"}`}>
+                    {formatPriceINR(preview.computed_savings)}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Buyer savings</p>
-              <p className="font-display text-lg text-emerald-600">
-                {formatPriceINR(preview.estimated_savings)}
-              </p>
-            </div>
+            <p className="text-xs text-muted-foreground border-t border-border/40 pt-3">
+              ✓ <strong>No fake percentages.</strong> Savings are calculated as: Market Price − Owner Price.
+              All values are transparent and verified.
+            </p>
           </div>
         </div>
 

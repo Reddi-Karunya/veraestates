@@ -95,18 +95,16 @@ function mapCostRow(
   if (!row) return getMockCostBreakdown(propertyId, basePrice);
   return {
     property_id: row.property_id,
-    base_price: Number(row.base_price),
+    owner_price: Number(row.owner_price),
     registration_cost: Number(row.registration_cost),
     legal_verification_cost: Number(row.legal_verification_cost),
     platform_fee: Number(row.platform_fee),
     miscellaneous_cost: Number(row.miscellaneous_cost),
-    estimated_market_price:
-      row.estimated_market_price != null
-        ? Number(row.estimated_market_price)
-        : null,
+    market_price:
+      row.market_price != null ? Number(row.market_price) : null,
     total_cost: Number(row.total_cost),
-    estimated_savings: Number(row.estimated_savings),
-    has_savings: Number(row.estimated_savings) > 0,
+    computed_savings: Number(row.computed_savings),
+    has_savings: Number(row.computed_savings) > 0,
   };
 }
 

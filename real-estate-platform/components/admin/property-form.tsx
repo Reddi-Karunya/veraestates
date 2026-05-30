@@ -217,7 +217,7 @@ export function PropertyForm({ property }: PropertyFormProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="approval_type">Approval type</Label>
+            <Label htmlFor="approval_type">Approval authority</Label>
             <select
               id="approval_type"
               name="approval_type"

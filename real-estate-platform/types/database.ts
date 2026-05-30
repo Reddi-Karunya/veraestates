@@ -4,7 +4,9 @@ export type ListingStatus = "available" | "sold" | "reserved";
 export type VerificationStatus = "pending" | "verified" | "rejected" | "expired";
 export type ApprovalType =
   | "rera"
+  | "vmrda"
   | "dtcp"
+  | "gvmc"
   | "panchayat"
   | "municipal"
   | "hmda"
@@ -194,14 +196,14 @@ export type PropertyWithImages = PropertyRow & {
 
 export type PropertyCostBreakdownRow = {
   property_id: string;
-  base_price: number;
+  owner_price: number;
   registration_cost: number;
   legal_verification_cost: number;
   platform_fee: number;
   miscellaneous_cost: number;
-  estimated_market_price: number | null;
+  market_price: number | null;
   total_cost: number;
-  estimated_savings: number;
+  computed_savings: number;
   created_at: string;
   updated_at: string;
 };

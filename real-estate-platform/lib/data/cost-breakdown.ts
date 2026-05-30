@@ -6,15 +6,13 @@ import type { PropertyCostBreakdownRow } from "@/types/database";
 
 function rowToComputed(row: PropertyCostBreakdownRow): CostBreakdownComputed {
   const input: CostBreakdownInput = {
-    base_price: Number(row.base_price),
+    owner_price: Number(row.owner_price),
     registration_cost: Number(row.registration_cost),
     legal_verification_cost: Number(row.legal_verification_cost),
     platform_fee: Number(row.platform_fee),
     miscellaneous_cost: Number(row.miscellaneous_cost),
-    estimated_market_price:
-      row.estimated_market_price != null
-        ? Number(row.estimated_market_price)
-        : null,
+    market_price:
+      row.market_price != null ? Number(row.market_price) : null,
   };
 
   const computed = computeCostBreakdown(input);
@@ -22,11 +20,11 @@ function rowToComputed(row: PropertyCostBreakdownRow): CostBreakdownComputed {
     property_id: row.property_id,
     ...computed,
     total_cost: Number(row.total_cost ?? computed.total_cost),
-    estimated_savings: Number(
-      row.estimated_savings ?? computed.estimated_savings
+    computed_savings: Number(
+      row.computed_savings ?? computed.computed_savings
     ),
     has_savings:
-      Number(row.estimated_savings ?? computed.estimated_savings) > 0,
+      Number(row.computed_savings ?? computed.computed_savings) > 0,
   };
 }
 
@@ -35,12 +33,12 @@ export function getMockCostBreakdown(
   basePrice: number
 ): CostBreakdownComputed {
   const input: CostBreakdownInput = {
-    base_price: basePrice,
+    owner_price: basePrice,
     registration_cost: Math.round(basePrice * 0.07),
     legal_verification_cost: 25_000,
     platform_fee: Math.round(basePrice * 0.01),
     miscellaneous_cost: 15_000,
-    estimated_market_price: Math.round(basePrice * 1.08),
+    market_price: Math.round(basePrice * 1.08),
   };
   return {
     property_id: propertyId,
@@ -84,12 +82,12 @@ export async function upsertCostBreakdown(
   const supabase = await createClient();
   const { error } = await supabase.from("property_cost_breakdowns").upsert({
     property_id: propertyId,
-    base_price: input.base_price,
+    owner_price: input.owner_price,
     registration_cost: input.registration_cost,
     legal_verification_cost: input.legal_verification_cost,
     platform_fee: input.platform_fee,
     miscellaneous_cost: input.miscellaneous_cost,
-    estimated_market_price: input.estimated_market_price,
+    market_price: input.market_price,
   });
 
   if (error) return { error: error.message };

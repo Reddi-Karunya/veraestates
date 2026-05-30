@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { calculateTrustScore } from "@/lib/trust/score";
-import { verificationCheckLabels } from "@/lib/constants/verification-checks";
+import { verificationCheckLabels, VERIFICATION_CHECK_CODES } from "@/lib/constants/verification-checks";
 import type {
   VerificationCheckRow,
   VerificationCheckTypeRow,
@@ -11,6 +11,13 @@ export type VerificationCheckWithType = VerificationCheckRow & {
   verifier: { full_name: string | null; email: string } | null;
 };
 
+export function filterVerificationChecks(
+  checks: VerificationCheckWithType[]
+): VerificationCheckWithType[] {
+  const allowed = new Set(VERIFICATION_CHECK_CODES);
+  return checks.filter((check) => allowed.has(check.check_type as typeof VERIFICATION_CHECK_CODES[number]));
+}
+
 export async function getVerificationCheckTypes(): Promise<
   VerificationCheckTypeRow[]
 > {
@@ -20,7 +27,9 @@ export async function getVerificationCheckTypes(): Promise<
     .select("*")
     .order("sort_order");
 
-  return (data ?? []) as VerificationCheckTypeRow[];
+  return (
+    (data ?? []) as VerificationCheckTypeRow[]
+  ).filter((type) => VERIFICATION_CHECK_CODES.includes(type.code as any));
 }
 
 export async function getPropertyVerificationChecks(
@@ -44,7 +53,7 @@ export async function getPropertyVerificationChecks(
   }
 
   const checks = (data ?? []) as VerificationCheckWithType[];
-  return checks.sort(
+  return filterVerificationChecks(checks).sort(
     (a, b) => (a.check_types?.sort_order ?? 0) - (b.check_types?.sort_order ?? 0)
   );
 }
@@ -72,7 +81,7 @@ export async function ensurePropertyChecksInitialized(
 export function getMockVerificationChecks(propertyId: string): VerificationCheckWithType[] {
   const now = new Date().toISOString();
   const codes = Object.entries(verificationCheckLabels);
-  const verifiedCount = 6;
+  const verifiedCount = codes.length;
 
   return codes.map(([code, label], i) => {
     const verified = i < verifiedCount;
@@ -104,15 +113,20 @@ export function getMockVerificationChecks(propertyId: string): VerificationCheck
 export function checksToDisplayBadges(
   checks: VerificationCheckWithType[]
 ): string[] {
-  return checks
+  return filterVerificationChecks(checks)
     .filter((c) => c.status === "verified")
-    .map((c) => c.check_types?.label ?? verificationCheckLabels[c.check_type as keyof typeof verificationCheckLabels] ?? c.check_type);
+    .map(
+      (c) =>
+        c.check_types?.label ??
+        verificationCheckLabels[c.check_type as keyof typeof verificationCheckLabels] ??
+        c.check_type
+    );
 }
 
 export function resolveTrustScore(
   dbScore: number | undefined,
   checks: VerificationCheckWithType[]
 ): number {
-  if (dbScore != null && dbScore > 0) return dbScore;
-  return calculateTrustScore(checks);
+  const activeChecks = filterVerificationChecks(checks);
+  return calculateTrustScore(activeChecks);
 }

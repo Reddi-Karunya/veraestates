@@ -9,7 +9,9 @@ CREATE TYPE verification_status AS ENUM ('pending', 'verified', 'rejected', 'exp
 
 CREATE TYPE approval_type AS ENUM (
   'rera',
+  'vmrda',
   'dtcp',
+  'gvmc',
   'panchayat',
   'municipal',
   'hmda',

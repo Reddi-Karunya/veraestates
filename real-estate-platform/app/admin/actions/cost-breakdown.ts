@@ -13,18 +13,23 @@ function parseCostFormData(formData: FormData): CostBreakdownInput {
     return Number.isNaN(n) ? null : n;
   };
 
-  const base_price = num("base_price");
-  if (base_price == null || base_price < 0) {
-    throw new Error("Invalid base price");
+  const owner_price = num("owner_price");
+  if (owner_price == null || owner_price < 0) {
+    throw new Error("Invalid owner price");
+  }
+
+  const market_price = num("market_price");
+  if (market_price != null && market_price < owner_price) {
+    throw new Error("Market price must be greater than or equal to owner price");
   }
 
   return {
-    base_price,
+    owner_price,
     registration_cost: num("registration_cost") ?? 0,
     legal_verification_cost: num("legal_verification_cost") ?? 0,
     platform_fee: num("platform_fee") ?? 0,
     miscellaneous_cost: num("miscellaneous_cost") ?? 0,
-    estimated_market_price: num("estimated_market_price"),
+    market_price,
   };
 }
 

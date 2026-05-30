@@ -28,6 +28,17 @@ type PropertyDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+const APPROVAL_AUTHORITY_LABELS: Record<string, string> = {
+  rera: "RERA",
+  vmrda: "VMRDA",
+  dtcp: "DTCP",
+  gvmc: "GVMC",
+  panchayat: "Panchayat",
+  municipal: "Municipal",
+  hmda: "HMDA",
+  other: "Other",
+};
+
 export async function generateStaticParams() {
   const slugs = await getAllSlugs();
   return slugs.map((slug) => ({ slug }));
@@ -128,6 +139,15 @@ export default async function PropertyDetailPage({
               </div>
 
               <PropertySpecs property={property} />
+
+              {property.approvalType && (
+                <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm">
+                  <h2 className="font-display text-xl text-navy">Approval Authority</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {APPROVAL_AUTHORITY_LABELS[property.approvalType] ?? property.approvalType} Approved
+                  </p>
+                </div>
+              )}
 
               {property.costBreakdown && (
                 <CostTransparencySection

@@ -6,6 +6,8 @@ import type {
 } from "@/lib/mock-properties";
 import {
   checksToDisplayBadges,
+  filterVerificationChecks,
+  resolveTrustScore,
   type VerificationCheckWithType,
 } from "@/lib/data/verification";
 import { isFullyVerified } from "@/lib/trust/score";
@@ -50,8 +52,9 @@ export function mapRowToProperty(
   const cover = sorted.find((i) => i.is_cover) ?? sorted[0];
   const imageUrls = sorted.map((i) => i.public_url);
   const loc = row.location as { locality?: string; landmark?: string; pincode?: string };
-  const trustScore = row.trust_score ?? 0;
-  const badges = checksToDisplayBadges(checks);
+  const filteredChecks = filterVerificationChecks(checks);
+  const trustScore = resolveTrustScore(row.trust_score, filteredChecks);
+  const badges = checksToDisplayBadges(filteredChecks);
 
   return {
     id: row.id,
@@ -79,8 +82,8 @@ export function mapRowToProperty(
     listingStatus: row.listing_status,
     verificationStatus: row.verification_status,
     trustScore,
-    isVerified: isFullyVerified(trustScore, checks.length),
-    verificationChecks: mapChecksToDisplay(checks),
+    isVerified: isFullyVerified(trustScore, filteredChecks.length),
+    verificationChecks: mapChecksToDisplay(filteredChecks),
     approvalType: row.approval_type,
     ownershipStatus: row.ownership_status,
     amenities: row.amenities ?? [],

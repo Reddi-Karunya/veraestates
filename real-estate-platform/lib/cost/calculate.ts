@@ -2,7 +2,7 @@ import type { CostBreakdownInput } from "@/lib/cost/types";
 
 export function calculateTotalCost(input: CostBreakdownInput): number {
   return (
-    input.base_price +
+    input.owner_price +
     input.registration_cost +
     input.legal_verification_cost +
     input.platform_fee +
@@ -10,27 +10,25 @@ export function calculateTotalCost(input: CostBreakdownInput): number {
   );
 }
 
-export function calculateEstimatedSavings(
-  input: CostBreakdownInput,
-  totalCost?: number
+export function calculateComputedSavings(
+  input: CostBreakdownInput
 ): number {
-  const total = totalCost ?? calculateTotalCost(input);
   if (
-    input.estimated_market_price == null ||
-    input.estimated_market_price <= total
+    input.market_price == null ||
+    input.market_price < input.owner_price
   ) {
     return 0;
   }
-  return input.estimated_market_price - total;
+  return input.market_price - input.owner_price;
 }
 
 export function computeCostBreakdown(input: CostBreakdownInput) {
   const total_cost = calculateTotalCost(input);
-  const estimated_savings = calculateEstimatedSavings(input, total_cost);
+  const computed_savings = calculateComputedSavings(input);
   return {
     ...input,
     total_cost,
-    estimated_savings,
-    has_savings: estimated_savings > 0,
+    computed_savings,
+    has_savings: computed_savings > 0,
   };
 }
