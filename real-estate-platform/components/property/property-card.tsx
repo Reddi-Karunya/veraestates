@@ -3,7 +3,6 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { SavingsBadge } from "@/components/property/savings-badge";
 import { TrustScoreBadge } from "@/components/property/trust-score-badge";
 import { formatPriceINR } from "@/lib/format-price";
 import type { PropertyListItem, PropertyType } from "@/lib/mock-properties";
@@ -42,11 +41,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
               isVerified={property.isVerified}
             />
           )}
-          {property.costBreakdown?.has_savings && (
-            <SavingsBadge
-              savings={property.costBreakdown.computed_savings}
-            />
-          )}
         </div>
       </Link>
 
@@ -67,11 +61,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
             <p className="font-display text-lg text-gold">
               {formatPriceINR(property.priceInr)}
             </p>
-            {property.costBreakdown?.has_savings && (
-              <p className="mt-1 text-xs text-emerald-600">
-                Total from {formatPriceINR(property.costBreakdown.total_cost)}
-              </p>
-            )}
           </div>
         </div>
 

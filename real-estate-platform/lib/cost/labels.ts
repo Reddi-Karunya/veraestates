@@ -1,14 +1,12 @@
 import type { CostBreakdownComputed, CostLineItem } from "@/lib/cost/types";
 
 export const COST_LINE_LABELS = {
-  owner_price: "Owner Direct Price",
+  owner_price: "Property Price",
   registration_cost: "Registration Charges",
   legal_verification_cost: "Legal Verification Fee",
   platform_fee: "Platform Service Fee",
   miscellaneous_cost: "Miscellaneous Charges",
   total_cost: "Total Acquisition Cost",
-  market_price: "Typical Broker-Assisted Market Price",
-  computed_savings: "You Save",
 } as const;
 
 export function buildCostLineItems(

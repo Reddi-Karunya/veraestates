@@ -5,7 +5,6 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SavingsBadge } from "@/components/property/savings-badge";
 import { updateCostBreakdownAction } from "@/app/admin/actions/cost-breakdown";
 import { COST_LINE_LABELS } from "@/lib/cost/labels";
 import { computeCostBreakdown } from "@/lib/cost/calculate";
@@ -26,7 +25,7 @@ type CostBreakdownField = {
 };
 
 const fields: CostBreakdownField[] = [
-  { name: "owner_price", label: COST_LINE_LABELS.owner_price, hint: "Verified direct seller price" },
+  { name: "owner_price", label: COST_LINE_LABELS.owner_price, hint: "Verified property price" },
   { name: "registration_cost", label: COST_LINE_LABELS.registration_cost },
   {
     name: "legal_verification_cost",
@@ -34,11 +33,6 @@ const fields: CostBreakdownField[] = [
   },
   { name: "platform_fee", label: COST_LINE_LABELS.platform_fee },
   { name: "miscellaneous_cost", label: COST_LINE_LABELS.miscellaneous_cost },
-  {
-    name: "market_price",
-    label: COST_LINE_LABELS.market_price,
-    hint: "Typical broker-assisted price in this market",
-  },
 ];
 
 export function CostBreakdownForm({
@@ -58,7 +52,7 @@ export function CostBreakdownForm({
     legal_verification_cost: breakdown.legal_verification_cost,
     platform_fee: breakdown.platform_fee,
     miscellaneous_cost: breakdown.miscellaneous_cost,
-    market_price: breakdown.market_price,
+    market_price: null,
   });
 
   return (
@@ -67,12 +61,9 @@ export function CostBreakdownForm({
         <div>
           <h2 className="font-display text-lg text-navy">Cost breakdown</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Direct Deal Advantage: Owner price vs. Typical broker-assisted market price.
+            Enter the property price and transparent fees. Total acquisition cost is calculated automatically.
           </p>
         </div>
-        {preview.has_savings && (
-          <SavingsBadge savings={preview.computed_savings} size="md" />
-        )}
       </div>
 
       {viewCount > 0 && (
@@ -109,7 +100,7 @@ export function CostBreakdownForm({
                 defaultValue={
                   breakdown[field.name] != null ? String(breakdown[field.name]) : ""
                 }
-                required={field.name !== "market_price"}
+                required
               />
             </div>
           ))}
@@ -119,32 +110,36 @@ export function CostBreakdownForm({
           <div className="space-y-4">
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Direct Deal Advantage
+                Cost preview
               </p>
               <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
                 <div>
-                  <p className="text-xs text-muted-foreground">Owner price</p>
+                  <p className="text-xs text-muted-foreground">Property price</p>
                   <p className="font-display text-lg text-navy">
                     {formatPriceINR(preview.owner_price)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">Market price</p>
+                  <p className="text-xs text-muted-foreground">Total fees</p>
                   <p className="font-display text-lg text-navy">
-                    {preview.market_price ? formatPriceINR(preview.market_price) : "—"}
+                    {formatPriceINR(
+                      preview.registration_cost +
+                      preview.legal_verification_cost +
+                      preview.platform_fee +
+                      preview.miscellaneous_cost
+                    )}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-muted-foreground">You save</p>
-                  <p className={`font-display text-lg ${preview.has_savings ? "text-emerald-600" : "text-muted-foreground"}`}>
-                    {formatPriceINR(preview.computed_savings)}
+                  <p className="text-xs text-muted-foreground">Total acquisition cost</p>
+                  <p className="font-display text-lg text-gold">
+                    {formatPriceINR(preview.total_cost)}
                   </p>
                 </div>
               </div>
             </div>
             <p className="text-xs text-muted-foreground border-t border-border/40 pt-3">
-              ✓ <strong>No fake percentages.</strong> Savings are calculated as: Market Price − Owner Price.
-              All values are transparent and verified.
+              Total acquisition cost is automatically calculated from the property price and itemized fees.
             </p>
           </div>
         </div>

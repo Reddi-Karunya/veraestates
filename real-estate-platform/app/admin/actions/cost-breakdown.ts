@@ -18,18 +18,13 @@ function parseCostFormData(formData: FormData): CostBreakdownInput {
     throw new Error("Invalid owner price");
   }
 
-  const market_price = num("market_price");
-  if (market_price != null && market_price < owner_price) {
-    throw new Error("Market price must be greater than or equal to owner price");
-  }
-
   return {
     owner_price,
     registration_cost: num("registration_cost") ?? 0,
     legal_verification_cost: num("legal_verification_cost") ?? 0,
     platform_fee: num("platform_fee") ?? 0,
     miscellaneous_cost: num("miscellaneous_cost") ?? 0,
-    market_price,
+    market_price: null,
   };
 }
 

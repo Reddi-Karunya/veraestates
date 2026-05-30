@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Calculator, Check, Info } from "lucide-react";
-import { SavingsBadge } from "@/components/property/savings-badge";
+import { Calculator, Check } from "lucide-react";
 import { AnalyticsEvents } from "@/lib/analytics/events";
 import { trackAnalyticsClient } from "@/lib/analytics/track-client";
 import { buildCostLineItems, COST_LINE_LABELS } from "@/lib/cost/labels";
 import type { CostBreakdownComputed } from "@/lib/cost/types";
 import { formatPriceINR } from "@/lib/format-price";
-import { cn } from "@/lib/utils";
 
 type CostTransparencySectionProps = {
   propertyId: string;
@@ -33,10 +31,9 @@ export function CostTransparencySection({
       metadata: {
         property_title: propertyTitle,
         total_cost: breakdown.total_cost,
-        computed_savings: breakdown.computed_savings,
       },
     });
-  }, [propertyId, propertyTitle, breakdown.total_cost, breakdown.computed_savings]);
+  }, [propertyId, propertyTitle, breakdown.total_cost]);
 
   return (
     <section
@@ -58,13 +55,9 @@ export function CostTransparencySection({
               </h2>
             </div>
           </div>
-          {breakdown.has_savings && (
-            <SavingsBadge savings={breakdown.computed_savings} size="md" />
-          )}
-        </div>
-        <p className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">
-          <Info className="mt-0.5 size-4 shrink-0" />
-          Purchase with verified seller pricing and transparent cost disclosure.
+            </div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          VeraEstates focuses on verified properties, transparent pricing, and direct access to sellers. Buyers can review approvals, documentation status, and total acquisition costs before making an enquiry.
         </p>
       </div>
 
@@ -72,9 +65,11 @@ export function CostTransparencySection({
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             "Owner Verified",
-            "Direct Deal Pricing",
-            "Transparent Cost Breakdown",
-            "No Multiple Broker Layers",
+            "Direct Seller Access",
+            "Transparent Pricing",
+            "Verified Documentation",
+            "Approval Authority Displayed",
+            "No Hidden Charges",
           ].map((item) => (
             <div key={item} className="flex items-start gap-3 rounded-2xl border border-border/60 bg-navy/5 p-4">
               <Check className="size-4 shrink-0 text-emerald-600" />
@@ -83,10 +78,7 @@ export function CostTransparencySection({
           ))}
         </div>
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-          By purchasing through VeraEstates, buyers can avoid multiple broker layers, hidden commissions, and inflated resale markups.
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Savings are calculated using the difference between the verified direct seller price and typical broker-assisted transaction prices.
+          Buyers can review approvals, documentation status, and total acquisition costs before making an enquiry.
         </p>
 
         <dl className="mt-8 space-y-3">
@@ -111,31 +103,6 @@ export function CostTransparencySection({
             </dd>
           </div>
 
-          {breakdown.market_price != null && (
-            <div className="flex items-center justify-between gap-4 pt-1">
-              <dt className="text-sm text-muted-foreground">
-                {COST_LINE_LABELS.market_price}
-              </dt>
-              <dd className="text-sm font-medium text-muted-foreground line-through decoration-muted-foreground/50">
-                {formatPriceINR(breakdown.market_price)}
-              </dd>
-            </div>
-          )}
-
-          {breakdown.has_savings && (
-            <div
-              className={cn(
-                "flex items-center justify-between gap-4 rounded-lg border border-emerald-500/30 bg-emerald-50 px-4 py-3"
-              )}
-            >
-              <dt className="font-medium text-emerald-800">
-                {COST_LINE_LABELS.computed_savings}
-              </dt>
-              <dd className="font-display text-xl text-emerald-700">
-                {formatPriceINR(breakdown.computed_savings)}
-              </dd>
-            </div>
-          )}
         </dl>
 
         <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
