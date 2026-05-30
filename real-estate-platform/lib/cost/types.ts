@@ -5,15 +5,12 @@ export type CostBreakdownInput = {
   legal_verification_cost: number;
   platform_fee: number;
   miscellaneous_cost: number;
-  market_price: number | null;
 };
 
 /** Fully computed breakdown for display */
 export type CostBreakdownComputed = CostBreakdownInput & {
   property_id: string;
   total_cost: number;
-  computed_savings: number;
-  has_savings: boolean;
 };
 
 export type CostLineItemKey =

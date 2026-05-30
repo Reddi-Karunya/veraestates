@@ -19,7 +19,7 @@ type CostBreakdownFormProps = {
 };
 
 type CostBreakdownField = {
-  name: keyof Omit<CostBreakdownComputed, "property_id" | "total_cost" | "computed_savings" | "has_savings">;
+  name: keyof Omit<CostBreakdownComputed, "property_id" | "total_cost">;
   label: string;
   hint?: string;
 };
@@ -52,7 +52,6 @@ export function CostBreakdownForm({
     legal_verification_cost: breakdown.legal_verification_cost,
     platform_fee: breakdown.platform_fee,
     miscellaneous_cost: breakdown.miscellaneous_cost,
-    market_price: null,
   });
 
   return (

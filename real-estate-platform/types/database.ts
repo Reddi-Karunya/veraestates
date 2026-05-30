@@ -201,9 +201,7 @@ export type PropertyCostBreakdownRow = {
   legal_verification_cost: number;
   platform_fee: number;
   miscellaneous_cost: number;
-  market_price: number | null;
   total_cost: number;
-  computed_savings: number;
   created_at: string;
   updated_at: string;
 };

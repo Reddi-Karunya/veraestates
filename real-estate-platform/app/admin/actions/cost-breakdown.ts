@@ -24,7 +24,6 @@ function parseCostFormData(formData: FormData): CostBreakdownInput {
     legal_verification_cost: num("legal_verification_cost") ?? 0,
     platform_fee: num("platform_fee") ?? 0,
     miscellaneous_cost: num("miscellaneous_cost") ?? 0,
-    market_price: null,
   };
 }
 

@@ -6,13 +6,11 @@ import type { PropertyCostBreakdownRow } from "@/types/database";
 
 function rowToComputed(row: PropertyCostBreakdownRow): CostBreakdownComputed {
   const input: CostBreakdownInput = {
-    owner_price: Number(row.owner_price),
-    registration_cost: Number(row.registration_cost),
-    legal_verification_cost: Number(row.legal_verification_cost),
-    platform_fee: Number(row.platform_fee),
-    miscellaneous_cost: Number(row.miscellaneous_cost),
-    market_price:
-      row.market_price != null ? Number(row.market_price) : null,
+    owner_price: Number(row.owner_price ?? 0),
+    registration_cost: Number(row.registration_cost ?? 0),
+    legal_verification_cost: Number(row.legal_verification_cost ?? 0),
+    platform_fee: Number(row.platform_fee ?? 0),
+    miscellaneous_cost: Number(row.miscellaneous_cost ?? 0),
   };
 
   const computed = computeCostBreakdown(input);
@@ -20,11 +18,6 @@ function rowToComputed(row: PropertyCostBreakdownRow): CostBreakdownComputed {
     property_id: row.property_id,
     ...computed,
     total_cost: Number(row.total_cost ?? computed.total_cost),
-    computed_savings: Number(
-      row.computed_savings ?? computed.computed_savings
-    ),
-    has_savings:
-      Number(row.computed_savings ?? computed.computed_savings) > 0,
   };
 }
 
@@ -38,7 +31,6 @@ export function getMockCostBreakdown(
     legal_verification_cost: 25_000,
     platform_fee: Math.round(basePrice * 0.01),
     miscellaneous_cost: 15_000,
-    market_price: Math.round(basePrice * 1.08),
   };
   return {
     property_id: propertyId,
@@ -87,7 +79,6 @@ export async function upsertCostBreakdown(
     legal_verification_cost: input.legal_verification_cost,
     platform_fee: input.platform_fee,
     miscellaneous_cost: input.miscellaneous_cost,
-    market_price: input.market_price,
   });
 
   if (error) return { error: error.message };

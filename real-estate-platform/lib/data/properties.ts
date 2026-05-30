@@ -78,7 +78,7 @@ const PUBLIC_SELECT = `
     *,
     check_types:verification_check_types (*)
   ),
-  property_cost_breakdowns (*)
+  property_cost_breakdowns(property_id,owner_price,registration_cost,legal_verification_cost,platform_fee,miscellaneous_cost,total_cost,created_at,updated_at)
 `;
 
 type PropertyRowWithRelations = PropertyRow & {
@@ -95,16 +95,12 @@ function mapCostRow(
   if (!row) return getMockCostBreakdown(propertyId, basePrice);
   return {
     property_id: row.property_id,
-    owner_price: Number(row.owner_price),
-    registration_cost: Number(row.registration_cost),
-    legal_verification_cost: Number(row.legal_verification_cost),
-    platform_fee: Number(row.platform_fee),
-    miscellaneous_cost: Number(row.miscellaneous_cost),
-    market_price:
-      row.market_price != null ? Number(row.market_price) : null,
-    total_cost: Number(row.total_cost),
-    computed_savings: Number(row.computed_savings),
-    has_savings: Number(row.computed_savings) > 0,
+    owner_price: Number(row.owner_price ?? 0),
+    registration_cost: Number(row.registration_cost ?? 0),
+    legal_verification_cost: Number(row.legal_verification_cost ?? 0),
+    platform_fee: Number(row.platform_fee ?? 0),
+    miscellaneous_cost: Number(row.miscellaneous_cost ?? 0),
+    total_cost: Number(row.total_cost ?? 0),
   };
 }
 
